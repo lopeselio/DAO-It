@@ -127,7 +127,4 @@ contract DAOIt {
         require(msg.sender == owner, "Only Owner Can Add Tokens");
         validTokens.push(_tokenId);
     }
-
-
-
 }
