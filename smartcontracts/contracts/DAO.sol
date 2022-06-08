@@ -88,6 +88,23 @@ contract DAOIt {
         nextProposal++;
     }
 
-    
+    function voteOnProposal(uint256 _id, bool _vote) public {
+        require(Proposals[_id].exists, "This Proposal does not exist");
+        require(checkVoteEligibility[_id, msg.sender], "You cannot vote on this proposal");
+        require(!Proposals[_id].voteStatus[msg.sender], "You have already voted on this proposal");
+        require(block.number <+ Proposals[_id].deadline, "The Proposal Deadline has already passed");
+
+        proposal storage p = Proposals[_id];
+        if(_vote) {
+            p.votesUp++;
+        } else {
+            p.votesDown++;
+        }
+
+        p.voteStatus[msg.sender] = true;
+
+        emit newVote(p.votesUp, p.votesDown, msg.sender, _id, _vote);
+
+    }
 
 }
