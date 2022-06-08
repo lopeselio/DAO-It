@@ -107,4 +107,27 @@ contract DAOIt {
 
     }
 
+    function countVotes(uint256 _id) public {
+        require(msg.sender == owner, "Only Owner can count votes");
+        require(Proposals[_id].exists, "This proposal does not exist");
+        require(block.number > Proposals[_id].deadline, "Voting has not concluded");
+        require(!Proposals[_id].countConducted, "Count already conducted");
+    
+        proposal storage p = Proposals[_id];
+
+        if(Proposals[_id].votesDown < Proposals[_id].votesUp){
+            p.passed = true;
+        }
+        p.countConducted = true;
+
+        emit proposalCount(_id, p.passed);
+    }
+
+    function addTokenId(uint256 _tokenId) public {
+        require(msg.sender == owner, "Only Owner Can Add Tokens");
+        validTokens.push(_tokenId);
+    }
+
+
+
 }
